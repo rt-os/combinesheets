@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "build": "nexe.cmd .\\index.js -o .\\build\\combine.exe",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ryan Thoma",

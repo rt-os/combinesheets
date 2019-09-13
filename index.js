@@ -1,3 +1,4 @@
+const fs = require('fs')
 const res = require('./src/resource')
 const debug = require('debug')('excel')
 const moment = require('moment')
