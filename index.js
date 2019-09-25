@@ -19,6 +19,12 @@ const getDirectories = source => {
 
 // generating the main sheet
 const Main = () => {
+  if (settings.unstyled === undefined) {
+    settings.unstyled = 'master.xlsx'
+  }
+  if (settings.styled === undefined) {
+    settings.styled = 'master.xlsx'
+  }
   moment.updateLocale('en', { week: { dow: 1 } })
   let currentData = []
   const path = pathToFileURL(dirpath)
@@ -38,7 +44,7 @@ const Main = () => {
           const date = moment(row[res.headers()[1]], 'w')
           // show output on console
           console.log(`user: ${name}\tweek: ${date.format('YYYY.w (MMM Do)')}`)
-          const finalrow = res.fixrow(row, name)
+          const finalrow = res.fixrow(row, name, settings.ADD_ZERO)
           currentData.push(finalrow)
         })
       }
@@ -52,9 +58,9 @@ const Main = () => {
   XLSX.utils.book_append_sheet(wb, sheet, res.sheetname)
   // write new excel file
   try {
-    XLSX.writeFile(wb, savepath + '/' + res.unstyledfile)
+    XLSX.writeFile(wb, savepath + '/' + settings.unstyled)
   } catch (e) {
-    console.log(`ERROR: file '${savepath + '\\' + res.unstyledfile}' can not be written to`)
+    console.log(`ERROR: file \'${savepath}\\${settings.unstyled}\' can not be written to`)
     process.exit(1)
   }
 }
@@ -63,7 +69,7 @@ const Main = () => {
 const Style = () => {
   let workbook = new Excel.Workbook()
   workbook.xlsx
-    .readFile(savepath + '/' + res.unstyledfile)
+    .readFile(savepath + '/' + settings.unstyled)
     .then(() => {
       let sheet = workbook.getWorksheet(1)
       // set an autofilter
@@ -105,15 +111,15 @@ const Style = () => {
             if (colNumber > 4 && colNumber < 12) {
               cell.alignment = { horizontal: 'center' }
             }
-            res.stylerows(cell, rowNumber)
+            res.stylerows(cell, rowNumber, settings.HIDE_ZEROS)
           })
         }
       })
       // write styled excel file
       workbook.xlsx
-        .writeFile(savepath + '/' + res.styledfilena)
+        .writeFile(`${savepath}\\${settings.styled}`)
         .then(() => {
-          console.log(`master sheet saved: ${savepath + '\\' + res.styledfilena}`)
+          console.log(`master sheet saved: ${savepath}\\${settings.styled}`)
           debug('saved')
         })
         .catch(err => {

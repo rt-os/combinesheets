@@ -1,1 +1,8 @@
-{}
+{
+  "ADD_ZERO": false,
+  "HIDE_ZEROS": false,
+  "load": "C:\\temp",
+  "save": "C:\\temp",
+  "unstyled": "master.xlsx",
+  "styled": "master.xlsx"
+}

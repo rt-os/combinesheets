@@ -1,7 +1,4 @@
 const debug = require('debug')('resource')
-
-const unstyledfile = 'master.xlsx'
-const styledfilena = 'master.xlsx'
 const sheetname = 'hours'
 
 const days = ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun']
@@ -39,21 +36,23 @@ const sortentry = (a, b) => {
   }
   if (a[headers[1]] < b[headers[1]]) return -1
   if (a[headers[1]] > b[headers[1]]) return 1
-  if (a[headers[0]].split(' ')[1].toLowerCase() < b[headers[0]].split(' ')[1].toLowerCase())
+  if (a[headers[0]].split(' ')[1].toLowerCase() < b[headers[0]].split(' ')[1].toLowerCase()) {
     return -1
-  if (a[headers[0]].split(' ')[1].toLowerCase() > b[headers[0]].split(' ')[1].toLowerCase())
+  }
+  if (a[headers[0]].split(' ')[1].toLowerCase() > b[headers[0]].split(' ')[1].toLowerCase()) {
     return 1
+  }
   // if (a[headers[3]].toLowerCase() < b[headers[3]].toLowerCase()) return -1
   // if (a[headers[3]].toLowerCase() > b[headers[3]].toLowerCase()) return 1
   return 0
 }
-const fixrow = (old, name) => {
+const fixrow = (old, name, add_zero) => {
   let arr = Object.assign({}, old)
   arr['total'] = 0
   arr['name'] = name
   days.forEach(day => {
-    arr[day] = fix(arr[day])
-    arr['total'] += arr[day]
+    arr[day] = add_zero ? fix(arr[day]) : arr[day]
+    arr['total'] += fix(arr[day])
   })
   return arr
 }
@@ -68,17 +67,17 @@ const stylehead = cell => {
     degree: 0,
     stops: [
       { position: 0, color: { argb: colorhead } },
-      { position: 1, color: { argb: colorhead } },
-    ],
+      { position: 1, color: { argb: colorhead } }
+    ]
   }
   cell.alignment = { vertical: 'bottom', horizontal: 'center' }
 }
-const stylerows = (cell, rown) => {
-  if (cell.value === 0) {
+const stylerows = (cell, rown, hide_zeros) => {
+  if (cell.value === 0 && hide_zeros) {
     cell.font = { color: { argb: colorrows[rown % 2] } }
   }
   cell.border = {
-    left: { style: 'thin', color: { argb: colorrows[(rown + 1) % 2] } },
+    left: { style: 'thin', color: { argb: colorrows[(rown + 1) % 2] } }
   }
   cell.fill = {
     type: 'gradient',
@@ -86,8 +85,8 @@ const stylerows = (cell, rown) => {
     degree: 0,
     stops: [
       { position: 0, color: { argb: colorrows[rown % 2] } },
-      { position: 1, color: { argb: colorrows[rown % 2] } },
-    ],
+      { position: 1, color: { argb: colorrows[rown % 2] } }
+    ]
   }
 }
 
@@ -100,11 +99,9 @@ module.exports = {
   fixrow,
   stylehead,
   stylerows,
-  unstyledfile,
-  styledfilena,
   sheetname,
   widths,
   cleanpath: path => {
     return path.replace(/\%20/g, ' ')
-  },
+  }
 }

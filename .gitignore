@@ -92,4 +92,4 @@ typings/
 
 # End of https://www.gitignore.io/api/node
 
-settings.json
+test.js
