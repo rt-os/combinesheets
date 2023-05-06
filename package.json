@@ -17,6 +17,6 @@
     "xlsx": "*"
   },
   "devDependencies": {
-    "nexe": "^3.3.7"
+    "nexe": "^4.0.0-rc.2"
   }
 }
